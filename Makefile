@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror               
 
 GREEN = \033[0;32m
 RED = \033[0;31m
@@ -7,27 +7,36 @@ CYAN = \033[0;36m
 MAGENTA = \033[0;35m
 YELLOW = \033[0;33m
 BLUE = \033[0;34m
-NC = \033[0m # No Color
+NC = \033[0m
 
-all: colleen grace sully
+ASCII_ART = "\n$(MAGENTA)     _                       _            \n  __| |_ __       __ _ _   _(_)_ __   ___ \n / _\` | '__|____ / _\` | | | | | '_ \\ / _ \\\ \n| (_| | | |_____| (_| | |_| | | | | |  __/\n \\__,_|_|        \\__, |\\__,_|_|_| |_|\\___|\n                    |_|$(NC) \n\n"
+
+all: ascii_art colleen grace sully
+
+ascii_art:
+	@echo $(ASCII_ART)
+	@sleep 1
 
 colleen: Colleen
 
 Colleen: Colleen.c
 	@echo "$(YELLOW)compiling Colleen...$(NC)"
 	$(CC) $(CFLAGS) -o Colleen Colleen.c
+	@sleep 0.5
 
 grace: Grace
 
 Grace: Grace.c
 	@echo "$(YELLOW)compiling Grace...$(NC)"
 	$(CC) $(CFLAGS) -o Grace Grace.c
+	@sleep 0.5
 
 sully: Sully
 
 Sully: Sully.c
 	@echo "$(YELLOW)compiling Sully...$(NC)"
 	$(CC) $(CFLAGS) -o Sully Sully.c
+	@sleep 0.5
 
 clean:
 	@rm -f *.o
@@ -43,16 +52,17 @@ fclean: clean
 
 re: fclean all
 
-test: colleen_test grace_test sully_test
+test: ascii_art colleen_test grace_test sully_test
 
 colleen_test: colleen
 	@echo "$(CYAN)--- Colleen test ---$(NC)"
 	@if [ -f tmp_Colleen ]; then rm -f tmp_Colleen; fi
 	./Colleen > tmp_Colleen
 	diff Colleen.c tmp_Colleen
+	@sleep 1
 	@if [ $$? -eq 0 ]; then echo "$(GREEN)OK$(NC)"; else echo "$(RED)KO$(NC)"; fi
 	@rm -f tmp_Colleen
-	@sleep 2
+	@sleep 1.5
 
 grace_test: grace
 	@echo "$(CYAN)--- Grace test ---$(NC)"
@@ -60,7 +70,7 @@ grace_test: grace
 	diff Grace.c Grace_kid.c
 	@if [ $$? -eq 0 ]; then echo "$(GREEN)OK$(NC)"; else echo "$(RED)KO$(NC)"; fi
 	@rm -f Grace_kid.c
-	@sleep 2
+	@sleep 1.5
 
 sully_test: sully	
 	@echo "$(CYAN)--- Sully test ---$(NC)"
@@ -72,4 +82,4 @@ sully_test: sully
 	@echo "$(MAGENTA)test2$(NC): "
 	cd tmp/; diff ../Sully.c Sully_5.c; diff ../Sully.c Sully_4.c; diff Sully_5.c Sully_0.c 
 
-.PHONY: all colleen grace sully clean fclean re test colleen_test grace_test sully_test
+.PHONY: all ascii_art colleen grace sully clean fclean re test colleen_test grace_test sully_test
